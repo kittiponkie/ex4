@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_detail.*
+import kotlinx.android.synthetic.main.course_item.view.*
 
 class DetailActivity : AppCompatActivity() {
 
@@ -16,12 +17,20 @@ class DetailActivity : AppCompatActivity() {
     val bundle = intent.extras
     var courseTitle: String = ""
     var courseDetail: String = ""
+        var credit : String =""
+        var imgpos : String = ""
         if (bundle != null){
             courseTitle = bundle.getString("cTitle")
             courseDetail = bundle.getString("cDetail")
+            credit = bundle.getString("Credits")
+            imgpos = bundle.getString("Pic")
+
             titleText.text = courseTitle
             descriptionText.text = courseDetail
+            credits.text = credit
 
+            val res = resources.getIdentifier("image1010"+imgpos, "drawable", packageName)
+            imgCourse.imgCourse.setImageResource(res)
             /*val courseTitle = intent.getStringExtra("courseTitle")
             titleText.text = courseTitle
 

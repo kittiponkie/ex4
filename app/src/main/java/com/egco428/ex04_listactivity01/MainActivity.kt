@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.BaseAdapter
+import android.widget.ImageView
+import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.course_item.view.*
 
@@ -28,16 +30,19 @@ class MainActivity : AppCompatActivity() {
 
         courseList.setOnItemClickListener { adapterView, view, position, id ->
             val course = data.get(position)
-            displayDetail(course)
+            var imgpos = position%3+1
+            displayDetail(course,imgpos.toString())
 
         }
     }
 
-    private fun displayDetail(course: Course) {
+    private fun displayDetail(course: Course,imgpos: String) {
         //Log.d("MainActivity", "Course: " + course.title)
         val intent = Intent(this,DetailActivity::class.java)
         intent.putExtra("cTitle", course.title)
         intent.putExtra("cDetail", course.description)
+        intent.putExtra("Credits", course.credits.toString())
+        intent.putExtra("Pic", imgpos)
         startActivity(intent)
     }
 
@@ -57,15 +62,28 @@ class MainActivity : AppCompatActivity() {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
 
             val course = objects[position]
-            val inflator = context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            val view = inflator.inflate(R.layout.course_item, null)
-            view.titleText.text = course.title
+            val rowMain:View
+            if(convertView == null){
+                val inflator = context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                rowMain  = inflator.inflate(R.layout.course_item, null)
+                val viewHolder = ViewHolder(rowMain.titleText,rowMain.imgCourse)
+                rowMain.tag = viewHolder
+            }
+            else{
+                rowMain = convertView
+            }
 
+            val viewHolder = rowMain.tag as ViewHolder
+            viewHolder.title.text = course.title
             var imgpos = position%3+1
             val res = context.resources.getIdentifier("image1010"+imgpos, "drawable", context.packageName)
-            view.imgCourse.setImageResource(res)
+            viewHolder.img.setImageResource(res)
 
-            return view
+            return rowMain
+        }
+
+        private class ViewHolder(val title:TextView,val img:ImageView){
+
         }
     }
 }
